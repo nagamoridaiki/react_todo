@@ -6,8 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export const TodoList = (props) => {
   const { todoList, handleDeleteTodo } = props;
 
-  console.log("todoListの中身", todoList)
-
   return (
       <ul className={styles.list}>
       {todoList.map((list) => (
