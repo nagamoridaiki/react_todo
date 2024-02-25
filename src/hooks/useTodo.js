@@ -57,19 +57,14 @@ export const useTodo =() => {
     }
   }
 
-  const status = {
+  return {
     showTodoList,
     searchKeyWord,
     addInputValue,
-    DisplayTodo
-  }
-
-  const actions = {
+    DisplayTodo,
     onChangeSetSearchKeyWord,
     onChangeAddTodo,
     handleAddTodo,
     deleteTodo
-  }
-
-  return [status, actions];
+  };
 }

@@ -3,22 +3,19 @@ import { TodoList } from "../../organisms/TodoList"
 import { AddTodo } from "../../organisms/AddTodo"
 import { SearchArea } from "../../atoms/SearchArea"
 import { useTodo } from "../../../hooks/useTodo.js"
+import { useTodoContext } from "../../../contexts/TodoContext.jsx";
 
 export const TodoTemplate = () => {
 
-  const [
-    {
-      searchKeyWord,
-      addInputValue,
-      DisplayTodo
-    },
-    {
-      onChangeSetSearchKeyWord,
-      onChangeAddTodo,
-      handleAddTodo,
-      deleteTodo
-    }
-   ] = useTodo();
+  const {
+    searchKeyWord,
+    addInputValue,
+    DisplayTodo,
+    onChangeSetSearchKeyWord,
+    onChangeAddTodo,
+    handleAddTodo,
+    deleteTodo
+  } = useTodoContext();
 
   return (
     <div className={styles.container}>
