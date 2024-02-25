@@ -8,6 +8,7 @@ export const AddTodo = (props) => {
     <>
       <h2 className={style.subTitle}>{"ADD TODO"}</h2>
       <SearchArea
+        role={"add-todo-input-form"}
         searchKeyWord={addInputValue}
         placeholder={"New Todo"}
         onChangeSetSearchKeyWord={onChangeAddTodo}
