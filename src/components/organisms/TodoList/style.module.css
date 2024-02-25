@@ -4,6 +4,9 @@
 
 .todo {
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
   list-style: none;
   line-height: 1.5;
@@ -24,11 +27,21 @@
   color: #fff;
 }
 
+.area {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+  width: 130px;
+  height: 30px;
+}
+
 .far {
+  display: block;
   cursor: pointer;
-  position: absolute;
-  top: 24px;
-  right: 10px;
-  width: 30px;
+  /*position: absolute;*/
+  /*top: 24px;*/
+  /*right: 10px;*/
+  width: 40px;
+  height: 40px;
   color: #ff9900;
 }

@@ -1,70 +1,100 @@
-import { useState, useMemo } from "react";
-import { defaultTodo } from "../common/index.js";
+/**
+ * useTodo
+ *
+ * @package hooks
+ */
+import { useState, useCallback } from "react";
+import { INIT_TODO_LIST, INIT_UNIQUE_ID } from "../constants/data.js";
 
-export const useTodo =() => {
-  // 表示用Todoリスト
-  const [showTodoList, setTodoList] = useState(defaultTodo);
+/**
+ * useTodo
+ */
+export const useTodo = () => {
+  /* todolist */
+  const [originTodoList, setOriginTodoList] = useState(INIT_TODO_LIST);
+  /* todo採番ID */
+  const [uniqueId, setUniqueId] = useState(INIT_UNIQUE_ID);
 
-  // 検索用キーワード
-  const [searchKeyWord, setSearchKeyWord] = useState('');
-
-  // 追加用タスク
-  const [addInputValue, setAddTodo] = useState("");
-
-  // 採番Todoリスト
-  const [todoId, setTodoId] = useState(showTodoList.length);
-
-  // Todoリスト表示ロジック
-  const DisplayTodo = useMemo(() => {
-    return showTodoList.filter((todo) => {
-      const regexp = new RegExp("^" + searchKeyWord, "i");
-      return todo.name.match(regexp);
-    })
-  }, [showTodoList, searchKeyWord]);
-
-  // 検索用キーワードの変更
-  const onChangeSetSearchKeyWord = (e) => setSearchKeyWord(e.target.value);
-
-  // 追加用todoの変更
-  const onChangeAddTodo = (e) => setAddTodo(e.target.value);
-
-  // 追加todoロジック
-  const handleAddTodo = (e) => {
-    if (e.key == "Enter" && addInputValue != '') {
-      const nextTodoid = todoId + 1
-
-      const newTodoList = [
-        ...showTodoList,
+  /* actions */
+  /**
+   * Todo新規登録処理
+   * @param {*} title
+   * @param {*} content
+   */
+  const addTodo = useCallback(
+    (title, content) => {
+      const nextUniqueId = uniqueId + 1;
+      const newTodo = [
+        ...originTodoList,
         {
-          id: nextTodoid,
-          name: addInputValue
-        }
+          id: nextUniqueId,
+          title: title,
+          content: content,
+        },
       ];
-
-      setTodoList(newTodoList);
+      // todolistを更新
+      setOriginTodoList(newTodo);
       // 採番IDを更新
-      setTodoId(nextTodoid);
-      // todo追加後、値をリセット
-      setAddTodo("");
-    }
-  }
+      setUniqueId(nextUniqueId);
+    },
+    [originTodoList, uniqueId]
+  );
 
-  // todo削除
-  const deleteTodo = (targetId, targetName) => {
-    if (window.confirm(`${targetName}のタスクを削除しますか`)) {
-      const afterDeletedTodoList = showTodoList.filter(list => list.id !== targetId);
-      setTodoList(afterDeletedTodoList)
-    }
-  }
+  /**
+   * Todo更新処理
+   * @param {*} id
+   * @param {*} title
+   * @param {*} content
+   * @type {(function(*, *, *): void)|*}
+   */
+  const updateTodo = useCallback(
+    (id, title, content) => {
+      const updatedTodoList = originTodoList.map((todo) => {
+        if (id === todo.id) {
+          return {
+            id: todo.id,
+            title: title,
+            content: content,
+          };
+        }
+
+        return todo;
+      });
+      setOriginTodoList(updatedTodoList);
+    },
+    [originTodoList]
+  );
+
+  /**
+   * Todo削除処理
+   * @param { number } targetId
+   * @param { string }targetTitle
+   */
+  const deleteTodo = useCallback(
+    (targetId, targetTitle) => {
+      if (window.confirm(`「${targetTitle}」のtodoを削除しますか？`)) {
+        // 削除するid以外のtodoリストを再編集
+        // filterを用いた方法
+        const newTodoList = originTodoList.filter(
+          (todo) => todo.id !== targetId
+        );
+
+        // 削除するTodoの配列番号を取り出してspliceで削除する方法もある
+        // const newTodoList = [...todoList];
+        // const deleteIndex = newTodoList.findIndex((todo) => todo.id === targetId);
+        // newTodoList.splice(deleteIndex, 1);
+
+        // todoを削除したtodo listで更新
+        setOriginTodoList(newTodoList);
+      }
+    },
+    [originTodoList]
+  );
 
   return {
-    showTodoList,
-    searchKeyWord,
-    addInputValue,
-    DisplayTodo,
-    onChangeSetSearchKeyWord,
-    onChangeAddTodo,
-    handleAddTodo,
-    deleteTodo
+    originTodoList,
+    addTodo,
+    updateTodo,
+    deleteTodo,
   };
-}
+};
