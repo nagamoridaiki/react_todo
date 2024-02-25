@@ -32,6 +32,7 @@ export const TodoTemplate = () => {
       </section>
       <section className={styles.common}>
         <SearchArea
+          role={"search-todo-input-form"}
           searchKeyWord={searchKeyWord}
           placeholder={"Search Keyword"}
           onChangeSetSearchKeyWord={onChangeSetSearchKeyWord}
