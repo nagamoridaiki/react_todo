@@ -1,48 +1,45 @@
-import styles from './style.module.css'
-import { TodoList } from "../../organisms/TodoList"
-import { AddTodo } from "../../organisms/AddTodo"
-import { SearchArea } from "../../atoms/SearchArea"
-import { useTodo } from "../../../hooks/useTodo.js"
-import { useTodoContext } from "../../../contexts/TodoContext.jsx";
+/**
+ * TodoTemplate
+ *
+ * @package components
+ */
+import { BaseLayout } from "../../organisms/BaseLayout";
+import { InputForm } from "../../atoms/InputForm";
+import { TodoList } from "../../organisms/TodoList";
+import { useTodoContext } from "../../../contexts/TodoContext";
+import { useTodoTemplate } from "./useTodoTemplate";
+import styles from "./styles.module.css";
 
+/**
+ * TodoTemplate
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const TodoTemplate = () => {
+  // コンテキストから状態とロジックを呼び出してコンポーネントにあてがう
+  const { originTodoList, deleteTodo } = useTodoContext();
 
-  const {
-    searchKeyWord,
-    addInputValue,
-    DisplayTodo,
-    onChangeSetSearchKeyWord,
-    onChangeAddTodo,
-    handleAddTodo,
-    deleteTodo
-  } = useTodoContext();
+  const [{ searchKeyword, showTodoList }, { handleChangeSearchKeyword }] =
+    useTodoTemplate({ originTodoList });
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Todo List</h1>
-      <section className={styles.common}>
-        <AddTodo
-          addInputValue={addInputValue}
-          onChangeAddTodo={onChangeAddTodo}
-          handleAddTodo={handleAddTodo}
-        />
-      </section>
-      <section className={styles.common}>
-        <SearchArea
-          role={"search-todo-input-form"}
-          searchKeyWord={searchKeyWord}
-          placeholder={"Search Keyword"}
-          onChangeSetSearchKeyWord={onChangeSetSearchKeyWord}
-        />
-      </section>
-      <section className={styles.common}>
-        {DisplayTodo.length > 0 && (
-          <TodoList
-            todoList={DisplayTodo}
-            handleDeleteTodo={deleteTodo}
+    <BaseLayout title={"TodoList"}>
+      <div className={styles.container}>
+        {/* Todo検索フォームエリア */}
+        <div className={styles.area}>
+          <InputForm
+            value={searchKeyword}
+            placeholder={"Search Keyword"}
+            onChange={handleChangeSearchKeyword}
           />
-        )}
-      </section>
-    </div>
+        </div>
+        {/* Todoリスト一覧表示 */}
+        <div className={styles.area}>
+          {showTodoList.length > 0 && (
+            <TodoList todoList={showTodoList} handleDeleteTodo={deleteTodo} />
+          )}
+        </div>
+      </div>
+    </BaseLayout>
   );
 };
