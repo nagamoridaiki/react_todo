@@ -1,5 +1,13 @@
-import { useState } from "react";
-import { defaultTodo } from "../common";
-import { TodoTemplate } from "../components/templates/todoTemplate/index.jsx";
+/**
+ * TodoPage
+ *
+ * @package pages
+ */
+import { TodoTemplate } from "../components/templates/TodoTemplate";
 
-export const Todo = () => <TodoTemplate />;
+/**
+ * TodoPage
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export const TodoPage = () => <TodoTemplate />;

@@ -1,29 +1,80 @@
-
-import styles from "./style.module.css";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+/**
+ * TodoList
+ *
+ * @package components
+ */
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  faTrashAlt,
+  faFile,
+  faPenToSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { NAVIGATION_PATH } from "../../../constants/navigations";
+import styles from "./style.module.css";
 
-export const TodoList = (props) => {
-  const { todoList, handleDeleteTodo } = props;
+/**
+ * TodoList
+ * @param {*} props
+ * @returns
+ */
+export const TodoList = ({ todoList, handleDeleteTodo }) => {
+  const navigate = useNavigate();
+
+  /**
+   * 詳細ページに遷移する処理
+   * @param {*} id
+   * @type {function(*): void}
+   */
+  const handleMoveDetailPage = useCallback(
+    (id) => navigate(`${NAVIGATION_PATH.DETAIL}${id}`),
+    [navigate]
+  );
+
+  /**
+   * 編集ページに遷移する処理
+   * @param {*} id
+   * @type {function(*): void}
+   */
+  const handleMoveEditPage = useCallback(
+    (id) => navigate(`${NAVIGATION_PATH.EDIT}${id}`),
+    [navigate]
+  );
 
   return (
-      <ul className={styles.list}>
-      {todoList.map((list) => (
-          <li key={list.id} role={`todo-list-${list.id}`} className={styles.todo}>
-            <span role={`todo-list-name-${list.id}`} class={styles.task}>{list.name}</span>
-            <div
-              role={`delete-todo-button-${list.id}`}
-              class={styles.far}
-              onClick={() => handleDeleteTodo(list.id, list.name)}
-            >
+    <ul className={styles.list}>
+      {todoList.map((todo) => (
+        <li key={todo.id} className={styles.todo}>
+          <span className={styles.task}>{todo.title}</span>
+          <div className={styles.area}>
+            <div className={styles.far}>
+              {/* https://www.digitalocean.com/community/tutorials/how-to-use-font-awesome-5-with-react-ja */}
+              <FontAwesomeIcon
+                icon={faFile}
+                size="lg"
+                onClick={() => handleMoveDetailPage(todo.id)}
+              />
+            </div>
+            <div className={styles.far}>
+              {/* https://www.digitalocean.com/community/tutorials/how-to-use-font-awesome-5-with-react-ja */}
+              <FontAwesomeIcon
+                icon={faPenToSquare}
+                size="lg"
+                onClick={() => handleMoveEditPage(todo.id)}
+              />
+            </div>
+            <div className={styles.far}>
               {/* https://www.digitalocean.com/community/tutorials/how-to-use-font-awesome-5-with-react-ja */}
               <FontAwesomeIcon
                 icon={faTrashAlt}
                 size="lg"
+                onClick={() => handleDeleteTodo(todo.id, todo.title)}
               />
             </div>
-          </li>
+          </div>
+        </li>
       ))}
-      </ul>
-  )
-}
+    </ul>
+  );
+};
